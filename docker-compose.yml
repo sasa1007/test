@@ -1,0 +1,33 @@
+version: "3.2"
+services:
+  php:
+    build: './php/'
+    volumes:
+      - ./public/:/var/www/html/
+  apache:
+    build: './apache/'
+    depends_on:
+      - php
+      - mysql
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public/:/var/www/html/
+  mysql:
+    image: mysql:5.6.40
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    #image: mysql
+    ports:
+      - "8181:80"
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
